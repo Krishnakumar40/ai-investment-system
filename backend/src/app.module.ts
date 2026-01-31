@@ -23,8 +23,15 @@ import { AnalysisModule } from './analysis/analysis.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const dbUrl = configService.get<string>('DATABASE_URL');
+        let dbUrl = configService.get<string>('DATABASE_URL');
+        
         if (dbUrl) {
+          // Clean the URL: remove spaces, quotes, and ensure correct prefix
+          dbUrl = dbUrl.trim().replace(/^['"]|['"]$/g, '');
+          if (dbUrl.startsWith('postgres://')) {
+            dbUrl = dbUrl.replace('postgres://', 'postgresql://');
+          }
+
           return {
             type: 'postgres',
             url: dbUrl,
