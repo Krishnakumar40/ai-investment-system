@@ -33,20 +33,16 @@ import { AnalysisModule } from './analysis/analysis.module';
           }
 
           // Fix special characters in password (like #) which break URL parsing
-          // Matches: protocol://user:password@host/db
+          // This splits at the LAST @ to separate password from host
           const urlMatch = dbUrl.match(/^(postgresql?:\/\/)([^:]+):(.+)@(.+)$/);
           if (urlMatch) {
             const protocol = urlMatch[1];
             const user = urlMatch[2];
-            const passwordWithHost = urlMatch[3]; // This might contain the @ host part
-            const lastAtIndex = passwordWithHost.lastIndexOf('@');
+            const password = urlMatch[3];
+            const hostAndDb = urlMatch[4];
             
-            if (lastAtIndex !== -1) {
-              const password = passwordWithHost.substring(0, lastAtIndex);
-              const hostAndDb = passwordWithHost.substring(lastAtIndex + 1);
-              // Encode only the password to handle chars like # or @
-              dbUrl = `${protocol}${user}:${encodeURIComponent(password)}@${hostAndDb}`;
-            }
+            // Encode the password to handle chars like # or @
+            dbUrl = `${protocol}${user}:${encodeURIComponent(password)}@${hostAndDb}`;
           }
 
           return {
