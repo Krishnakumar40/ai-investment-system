@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: investment_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: investment_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: investment_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+      DB_NAME: investment_db
+      AI_SERVICE_URL: http://ai-engine:5000
+    depends_on:
+      - postgres
+      - ai-engine
+
+  ai-engine:
+    build: ./ai-engine
+    container_name: investment_ai
+    restart: always
+    ports:
+      - "5000:5000"
+
+volumes:
+  postgres_data:

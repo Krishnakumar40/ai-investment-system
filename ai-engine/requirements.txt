@@ -1,0 +1,9 @@
+flask==1.1.4
+markupsafe==2.0.1
+uvicorn==0.15.0
+requests
+python-dotenv
+yfinance==0.1.70
+pandas==1.1.5
+urllib3<2.0
+typing_extensions
