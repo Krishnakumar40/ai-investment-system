@@ -32,17 +32,29 @@ import { AnalysisModule } from './analysis/analysis.module';
             dbUrl = dbUrl.replace('postgres://', 'postgresql://');
           }
 
-          // Fix special characters in password (like #) which break URL parsing
-          // This splits at the LAST @ to separate password from host
-          const urlMatch = dbUrl.match(/^(postgresql?:\/\/)([^:]+):(.+)@(.+)$/);
-          if (urlMatch) {
-            const protocol = urlMatch[1];
-            const user = urlMatch[2];
-            const password = urlMatch[3];
-            const hostAndDb = urlMatch[4];
+          // Build robust URL even if it has special characters
+          try {
+            const [protocolPart, rest] = dbUrl.split('://');
+            const protocol = protocolPart + '://';
             
-            // Encode the password to handle chars like # or @
-            dbUrl = `${protocol}${user}:${encodeURIComponent(password)}@${hostAndDb}`;
+            // Split at the LAST @ to safely separate password from host
+            const lastAtIndex = rest.lastIndexOf('@');
+            if (lastAtIndex !== -1) {
+              const authPart = rest.substring(0, lastAtIndex);
+              const hostAndDb = rest.substring(lastAtIndex + 1);
+              
+              // Split user and password at the FIRST : in the auth part
+              const firstColonIndex = authPart.indexOf(':');
+              if (firstColonIndex !== -1) {
+                const user = authPart.substring(0, firstColonIndex);
+                const password = authPart.substring(firstColonIndex + 1);
+                
+                // Re-encode everything cleanly
+                dbUrl = `${protocol}${user}:${encodeURIComponent(password)}@${hostAndDb}`;
+              }
+            }
+          } catch (e) {
+            // Fallback to original if parsing fails
           }
 
           return {
