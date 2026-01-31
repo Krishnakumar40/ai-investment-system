@@ -32,6 +32,23 @@ import { AnalysisModule } from './analysis/analysis.module';
             dbUrl = dbUrl.replace('postgres://', 'postgresql://');
           }
 
+          // Fix special characters in password (like #) which break URL parsing
+          // Matches: protocol://user:password@host/db
+          const urlMatch = dbUrl.match(/^(postgresql?:\/\/)([^:]+):(.+)@(.+)$/);
+          if (urlMatch) {
+            const protocol = urlMatch[1];
+            const user = urlMatch[2];
+            const passwordWithHost = urlMatch[3]; // This might contain the @ host part
+            const lastAtIndex = passwordWithHost.lastIndexOf('@');
+            
+            if (lastAtIndex !== -1) {
+              const password = passwordWithHost.substring(0, lastAtIndex);
+              const hostAndDb = passwordWithHost.substring(lastAtIndex + 1);
+              // Encode only the password to handle chars like # or @
+              dbUrl = `${protocol}${user}:${encodeURIComponent(password)}@${hostAndDb}`;
+            }
+          }
+
           return {
             type: 'postgres',
             url: dbUrl,
