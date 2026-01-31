@@ -2,11 +2,13 @@ FROM node:20-slim
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package files from backend folder
+COPY backend/package*.json ./
 
 RUN npm install --omit=dev
 
-COPY . .
+# Copy the rest of the backend files
+COPY backend/ ./
 
 RUN npm run build
 
