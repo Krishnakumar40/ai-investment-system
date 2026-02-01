@@ -19,11 +19,26 @@ export class TelegramService implements OnModuleInit {
   onModuleInit() {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
     if (!token) {
-      this.logger.error('TELEGRAM_BOT_TOKEN not found');
+      this.logger.error('❌ TELEGRAM_BOT_TOKEN not found in .env');
       return;
     }
 
-    this.bot = new TelegramBot(token, { polling: true });
+    try {
+        this.logger.log(`🤖 Initializing Telegram Bot...`);
+        this.bot = new TelegramBot(token, { polling: true });
+        
+        this.bot.on('polling_error', (error: any) => {
+            this.logger.error(`[POLLING ERROR] ${error.code || 'UNKNOWN'}: ${error.message}`);
+        });
+
+        this.bot.on('webhook_error', (error: any) => {
+            this.logger.error(`[WEBHOOK ERROR] ${error.code || 'UNKNOWN'}: ${error.message}`);
+        });
+
+        this.logger.log('✅ Telegram Bot Initialized and Polling started.');
+    } catch (e) {
+        this.logger.error(`❌ Failed to initialize Telegram Bot: ${e.message}`);
+    }
 
     this.bot.onText(/\/start/, async (msg) => {
         const chatId = msg.chat.id.toString();
