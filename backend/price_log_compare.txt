@@ -1,0 +1,20 @@
+
+
+--- Checking GOLDBEES.NS ---
+Fetching from: https://query1.finance.yahoo.com/v8/finance/chart/GOLDBEES.NS?interval=1d&range=1y
+Regular Market Price: 122.31
+Chart Previous Close: 68.09
+Regular Market Time (Unix): 1769940000
+Regular Market Time (Date): Sun Feb 01 2026 15:30:00 GMT+0530 (India Standard Time)
+Last Chart Timestamp (Unix): 1769940000
+Last Chart Timestamp (Date): Sun Feb 01 2026 15:30:00 GMT+0530 (India Standard Time)
+
+
+--- Checking NIFTYBEES.NS ---
+Fetching from: https://query1.finance.yahoo.com/v8/finance/chart/NIFTYBEES.NS?interval=1d&range=1y
+Regular Market Price: 282.41
+Chart Previous Close: 260.22
+Regular Market Time (Unix): 1769940000
+Regular Market Time (Date): Sun Feb 01 2026 15:30:00 GMT+0530 (India Standard Time)
+Last Chart Timestamp (Unix): 1769940000
+Last Chart Timestamp (Date): Sun Feb 01 2026 15:30:00 GMT+0530 (India Standard Time)

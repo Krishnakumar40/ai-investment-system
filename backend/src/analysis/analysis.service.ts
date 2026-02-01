@@ -25,10 +25,21 @@ export class AnalysisService {
 
       const meta = result.meta;
       const quote = result.indicators.quote[0];
-      
-      const currentPrice = meta.regularMarketPrice || meta.chartPreviousClose || 0;
-      
       const closes = (quote.close || []).filter((c: any) => c !== null);
+
+      // Improved Price Resolution:
+      // 1. Try regularMarketPrice (Real-time/Delayed)
+      // 2. Try the last close from the candle data (Most recent market data)
+      // 3. Fallback to chartPreviousClose (Often stale/incorrect in Yahoo's 1d feed)
+      let currentPrice = meta.regularMarketPrice;
+      
+      if (!currentPrice && closes.length > 0) {
+          currentPrice = closes[closes.length - 1];
+      }
+      
+      if (!currentPrice) {
+          currentPrice = meta.chartPreviousClose || 0;
+      }
       const highs = (quote.high || []).filter((h: any) => h !== null);
       const lows = (quote.low || []).filter((l: any) => l !== null);
       const volumes = (quote.volume || []).filter((v: any) => v !== null);

@@ -1,0 +1,14 @@
+Fetching from: https://query1.finance.yahoo.com/v8/finance/chart/GOLDBEES.NS?interval=1d&range=1y
+1d Interval Data:
+Symbol: GOLDBEES.NS
+Regular Market Price: 122.31
+Chart Previous Close: 68.09
+Regular Market Time: 1/2/2026, 3:30:00 pm
+App Calculated Price: 122.31
+
+Fetching 1m data from: https://query1.finance.yahoo.com/v8/finance/chart/GOLDBEES.NS?interval=1m&range=1d
+1m Interval Data:
+[1m] Regular Market Price: 122.31
+[1m] Chart Previous Close: 146.53
+[1m] Regular Market Time: 1/2/2026, 3:30:00 pm
+[1m] Last Candle Close: 122.30999755859375
